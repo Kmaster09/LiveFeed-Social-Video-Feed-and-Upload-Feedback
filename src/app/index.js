@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import {
   Animated,
@@ -18,19 +19,27 @@ import { colors } from '../styles/theme';
 export default function FeedScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
-  // TODO 1:
-  // Create an Animated.Value for the Create Post button.
-  // Think about the normal scale value.
+  // TODO 1: Normal button scale is 1.
+  const createButtonScale = useRef(new Animated.Value(1)).current;
 
+  // TODO 2: Shrink slightly when the user presses the button.
   function pressCreateIn() {
-    // TODO 2:
-    // Add a small press-in animation.
-    // Do not make the button bounce dramatically.
+    Animated.spring(createButtonScale, {
+      toValue: 0.96,
+      useNativeDriver: true,
+      speed: 30,
+      bounciness: 0,
+    }).start();
   }
 
+  // TODO 3: Return smoothly to normal size.
   function pressCreateOut() {
-    // TODO 3:
-    // Return the button to its normal size.
+    Animated.spring(createButtonScale, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 25,
+      bounciness: 4,
+    }).start();
   }
 
   async function refreshFeed() {
@@ -48,8 +57,16 @@ export default function FeedScreen() {
         <Text style={styles.brand}>LIVEFEED</Text>
 
         <View style={styles.topActions}>
-          <Ionicons name="search-outline" size={25} color={colors.text} />
-          <Ionicons name="chatbubbles-outline" size={25} color={colors.text} />
+          <Ionicons
+            name="search-outline"
+            size={25}
+            color={colors.text}
+          />
+          <Ionicons
+            name="chatbubbles-outline"
+            size={25}
+            color={colors.text}
+          />
         </View>
       </View>
 
@@ -63,15 +80,27 @@ export default function FeedScreen() {
           onPressIn={pressCreateIn}
           onPressOut={pressCreateOut}
           style={styles.createPressable}
+          accessibilityRole="button"
+          accessibilityLabel="Create a video post"
         >
-          {/* TODO 4:
-              Wrap this button in Animated.View and
-              connect your scale value.
-          */}
-          <View style={styles.createButton}>
-            <Text style={styles.createText}>Create a video post</Text>
-            <Ionicons name="videocam-outline" size={22} color={colors.live} />
-          </View>
+          {/* TODO 4: Connect the animated scale to the button. */}
+          <Animated.View
+            style={[
+              styles.createButton,
+              {
+                transform: [{ scale: createButtonScale }],
+              },
+            ]}
+          >
+            <Text style={styles.createText}>
+              Create a video post
+            </Text>
+            <Ionicons
+              name="videocam-outline"
+              size={22}
+              color={colors.live}
+            />
+          </Animated.View>
         </Pressable>
       </View>
 
@@ -87,10 +116,26 @@ export default function FeedScreen() {
 
       <View style={styles.bottomNav}>
         <Ionicons name="home" size={25} color={colors.blue} />
-        <Ionicons name="people-outline" size={25} color={colors.muted} />
-        <Ionicons name="play-circle-outline" size={27} color={colors.muted} />
-        <Ionicons name="notifications-outline" size={25} color={colors.muted} />
-        <Ionicons name="menu-outline" size={27} color={colors.muted} />
+        <Ionicons
+          name="people-outline"
+          size={25}
+          color={colors.muted}
+        />
+        <Ionicons
+          name="play-circle-outline"
+          size={27}
+          color={colors.muted}
+        />
+        <Ionicons
+          name="notifications-outline"
+          size={25}
+          color={colors.muted}
+        />
+        <Ionicons
+          name="menu-outline"
+          size={27}
+          color={colors.muted}
+        />
       </View>
     </SafeAreaView>
   );
